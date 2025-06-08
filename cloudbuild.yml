@@ -16,3 +16,5 @@ steps:
         "push",
         "southamerica-east1-docker.pkg.dev/microservices-462305/aeoroline/auth-ms",
       ]
+options:
+  logging: CLOUD_LOGGING_ONLY
