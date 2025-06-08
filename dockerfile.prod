@@ -18,12 +18,14 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules
 # Copy all code from the application
 COPY . .
 
+RUN npx prisma generate
+
 # RUN npm run test
 RUN npm run build
 
 RUN npm ci -f --only=production && npm cache clean --force
 
-RUN npx prisma generate
+
 
 
 # Create final image
