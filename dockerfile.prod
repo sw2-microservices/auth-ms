@@ -4,7 +4,6 @@ FROM node:21-alpine3.19 AS deps
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-COPY package-lock.json ./
 
 RUN npm install
 
@@ -19,12 +18,14 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules
 # Copy all code from the application
 COPY . .
 
+RUN npx prisma generate
+
 # RUN npm run test
 RUN npm run build
 
 RUN npm ci -f --only=production && npm cache clean --force
 
-RUN npx prisma generate
+
 
 
 # Create final image
