@@ -14,9 +14,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Airline {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  airline_name  String
+  alias         String @unique
+  country       String
+  contact_email String @unique
+  phone_number  String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relación con User (Admin)
+  admin         AdminUser?
+  
+  // Relación con Subscription
+  subscription  Subscription?
+}
+
+// Modelo User original (para compatibilidad)
 model User {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   email    String @unique
   name     String
   password String
+}
+
+// Nuevo modelo para administradores de aerolíneas
+model AdminUser {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  admin_name   String
+  admin_email  String @unique
+  admin_password String
+  admin_phone  String?
+  role         String @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relación con Airline
+  airline_id   String @unique @db.ObjectId
+  airline      Airline @relation(fields: [airline_id], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  plan            String @default("premium")
+  status          String @default("active")
+  payment_method  String @default("credit_card")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Datos de pago simulados
+  card_number     String
+  cardholder_name String
+  expiry_date     String
+  cvv             String
+  
+  // Relación con Airline
+  airline_id      String @unique @db.ObjectId
+  airline         Airline @relation(fields: [airline_id], references: [id], onDelete: Cascade)
 }
