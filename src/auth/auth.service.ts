@@ -73,7 +73,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
       const newUser = await this.user.create({
         data: {
           email: email,
-          password: bcrypt.hashSync(password, 10), // TODO: encriptar / hash
+          password: bcrypt.hashSync(password, 10),
           name: name,
         },
       });
